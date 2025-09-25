@@ -40,6 +40,7 @@ members = [
     "core/server",
     "core/tools",
     "examples/rust",
+    "foreign/cpp/ffi"
 ]
 exclude = ["foreign/python"]
 resolver = "2"

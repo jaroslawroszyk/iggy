@@ -19,9 +19,12 @@
 #include <sodium.h>
 #include <stdexcept>
 #include <string>
+#include <optional>
+#include <vector>
 #include "model.h"
 #include "net/iggy.h"
 #include "net/transport.h"
+#include "ffi.h"
 
 namespace icp {
 namespace client {
@@ -93,6 +96,7 @@ struct Options {
 class Client {
 public:
     explicit Client(const Options& options);
+    ~Client();
 
     /**
      * @brief Send a synchronous ping to the server to check if it is alive.
@@ -103,6 +107,31 @@ public:
      * @brief Get the Iggy server's performance statistics.
      */
     icp::model::sys::Stats getStats();
+
+    /**
+     * @brief Send messages to a stream/topic and partition.
+     */
+    void send(const std::string& stream_id,
+              const std::string& topic_id,
+              uint32_t partition_id,
+              const std::vector<icp::model::message::Message>& messages);
+
+    /**
+     * @brief Poll messages using a simple strategy.
+     * @param partition_id Optional partition id; pass std::nullopt for server side routing
+     * @return PolledMessages batch
+     */
+    icp::model::message::PolledMessages poll(const std::string& stream_id,
+                                             const std::string& topic_id,
+                                             const std::optional<uint32_t>& partition_id,
+                                             icp::model::shared::Consumer consumer,
+                                             uint32_t strategy_kind,
+                                             uint64_t strategy_value,
+                                             uint32_t count,
+                                             bool auto_commit);
+
+private:
+    IggyFfiClient* handle = nullptr;
 };
 };  // namespace client
 };  // namespace icp

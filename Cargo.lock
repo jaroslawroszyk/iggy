@@ -4033,6 +4033,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "iggy-cpp-ffi"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "iggy",
+ "serde",
+ "serde_json",
+ "spinning_top",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "iggy-mcp"
 version = "0.1.1"
 dependencies = [
